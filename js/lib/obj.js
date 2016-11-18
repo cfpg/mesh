@@ -18,8 +18,6 @@ define([
   Figure.prototype.setup = function() {
     this.obj = this.getObj();
     this.scene.add( this.obj );
-    
-    this.camera.position.z = 5;
   };
   
   Figure.prototype.render = function(direction) {

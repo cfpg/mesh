@@ -22,6 +22,7 @@ define([
     this.setupParams();
     
     this.perlin = new ImprovedNoise();
+    this.spheres = [];
     
     window.scene = this.scene = new THREE.Scene();
     this.camera = new THREE.PerspectiveCamera( 45, window.innerWidth/window.innerHeight, 0.1, 5000 );
@@ -48,10 +49,6 @@ define([
     this.mirror = new THREE.Mesh(this.mirrorGeometry, this.meshMaterial);
     // this.world3D.add( this.mirror );
     
-    // Add recatangle backdrop
-    // this.rect = new Rectangle(this.world3D, this.camera);
-    // this.rect.position.x = 800;
-    
     // Add wireframe plane
     this.wireMaterial = new THREE.MeshBasicMaterial({
       opacity: 0.5,
@@ -72,6 +69,7 @@ define([
     this.ctx = this.vidCanvas.getContext('2d');
     
     // Start rendering and animation!
+    this.createSphere('./img/spiral.png');
     this.listeners();
     this.appendToBody();
     this.onResize();
@@ -144,26 +142,15 @@ define([
     this.world3D.rotation.x += ((this.params.mouseY * this.params.tiltAmount) - this.world3D.rotation.x) * this.params.tiltSpeed;
     this.world3D.rotation.y += ((this.params.mouseX * this.params.tiltAmount) - this.world3D.rotation.y) * this.params.tiltSpeed;
     
-    this.positionCamera();
-    
     this.renderer.render(this.scene, this.camera);
     
   };
   
-  App.prototype.positionCamera = function() {
-    // var start = 600;
-    // var coefficient = 1;
-    // this.camera.position.x = start;
-    // console.log('UPDATING CAMERA XXX ', this.camera.position.x);
-    // if (this.camera.position.x >= 0 && this.camera.position.x < start) {
-    //   this.camera.position.x += coefficient;
-    //   console.log('POSITITITONG',this.camera.position.x)
-    // } else {
-    //   console.log('POSITITITONG')
-    //   this.camera.position.x -= coefficient;
-    // }
-    
-    // this.camera.updateProjectionMatrix();
+  App.prototype.createSphere = function(imageSrc) {
+    // Add a sphere to the scene randomly
+    var s = new Sphere(this.world3D, this.camera, imageSrc);
+    s.render();
+    this.spheres.push(s);
   };
   
   App.prototype.getZDepths = function() {
@@ -177,26 +164,12 @@ define([
     for (var i = 0; i < this.params.canvasWidth + 1; i++) {
       for (var j = 0; j < this.params.canvasHeight + 1; j++) {
         var color = new THREE.Color(this.getVideoColor(i, j));
-        // console.log(color)
         var brightness = this.getVideoBrightness(color);
         var gotoZ = this.params.zDepth * brightness - this.params.zDepth / 2;
-        
-        //add noise wobble
-        if (true) {
-          // gotoZ += this.perlin.noise(i * this.params.noiseScale, j * this.params.noiseScale, this.params.noisePosn) * this.params.noiseStrength;
-        }
         
         //tween to stablize
         var index = j * (this.params.canvasWidth + 1) + i;
         this.mirrorGeometry.vertices[index].z += (gotoZ - this.mirrorGeometry.vertices[index].z) / 5;
-        // console.log(this.mirrorGeometry.vertices[index].z)
-        // if (this.mirrorGeometry.vertices[index].z > -25 ) {
-        //   if (this.mirrorGeometry.vertices[index].x > 200) {
-        //     this.mirrorGeometry.vertices[index].x -= (gotoZ - this.mirrorGeometry.vertices[index].x) / 200;
-        //   } else {
-        //     this.mirrorGeometry.vertices[index].x += (gotoZ - this.mirrorGeometry.vertices[index].x) / 200;
-        //   }
-        // }
         
       }
     }

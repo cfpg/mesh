@@ -15,7 +15,6 @@ define([
   Rectangle.prototype = Object.create(Figure.prototype);
   
   Rectangle.prototype.getGeometry = function() {
-    console.log('RECTANGLING')
     return new THREE.PlaneGeometry(window.innerWidth, window.innerHeight);
   };
   

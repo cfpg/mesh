@@ -19,7 +19,6 @@ define([
   Webcam.prototype = Object.create(Figure.prototype);
   
   Webcam.prototype.position = function() {
-    console.log('positioning')
     return;
   };
   
@@ -37,12 +36,13 @@ define([
     this.video.height   = 240;
     this.video.autoplay = true;
     this.video.loop = true;
+    this.video.volume = 0;
     
     var THAT = this;
     
     navigator.webkitGetUserMedia({
       video: true,
-      audio: false
+      audio: true
     }, function(stream){
       THAT.video.src    = window.URL.createObjectURL(stream);
     }, function(error){
@@ -52,7 +52,7 @@ define([
   
   Webcam.prototype.getMaterial = function() {
     this.texture = new THREE.Texture( this.video );
-    console.log(this.texture)
+    
     return new THREE.MeshBasicMaterial({
       opacity: 1,
       map: this.texture
