@@ -1,0 +1,16 @@
+{
+  "name": "OAR_CNVS",
+  "version": "0.0.1",
+  "description": "OAR Portfolio",
+  "author": "Site Builder Inc. <hello@splash.co>",
+  "license": "MIT",
+  "main": "main.js",
+  "dependencies": {
+    "gsap": "^1.19.0",
+    "requirejs": "^2.3.2",
+    "three": "^0.81.2",
+    "three.js": "^0.77.1",
+    "underscore": "^1.8.3"
+  },
+  "devDependencies": {}
+}
