@@ -29,9 +29,17 @@ define([
     return this;
   };
   
+  Figure.prototype.setGeometry = function(geo) {
+    this.geometry = geo;
+  };
+  
   Figure.prototype.getGeometry = function() {
     this.geometry = new THREE.BoxGeometry( 1, 1, 2 );
     return this.geometry;
+  };
+  
+  Figure.prototype.setMaterial = function(mat) {
+    this.material = mat;
   };
   
   Figure.prototype.getMaterial = function() {

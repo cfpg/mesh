@@ -29,13 +29,6 @@ define([
     this.camera.target = new THREE.Vector3(0, 0, 0);
     this.camera.position.z = 600;
     
-    // Start webcam
-    this.webcam = new Webcam(this.scene, this.camera);
-    
-    // Create Webcam/Video Texture
-    this.webcamTexture = new THREE.Texture( this.webcam.video );
-    this.webcamTexture.minFilter = THREE.NearestFilter;
-    
     // Add world
     this.world3D = new THREE.Object3D();
     this.scene.add( this.world3D );
@@ -43,12 +36,22 @@ define([
     // Add mirror
     this.mirrorGeometry = new THREE.PlaneGeometry(640, 480, this.params.canvasWidth, this.params.canvasHeight);
     this.mirrorGeometry.dynamic = true;
+    
+    // Start webcam
+    this.webcam = new Webcam(this.world3D, this.camera, this.params);
+    this.webcam.setGeometry( this.mirrorGeometry );
+    
+    // Create Webcam/Video Texture
+    this.webcamTexture = new THREE.Texture( this.webcam.video );
+    this.webcamTexture.minFilter = THREE.NearestFilter;
+    this.webcam.texture = this.webcamTexture;
+    
     this.meshMaterial = new THREE.MeshBasicMaterial({
       opacity: 1,
       map: this.webcamTexture
     });
     this.mirror = new THREE.Mesh(this.mirrorGeometry, this.meshMaterial);
-    this.world3D.add( this.mirror );
+    // this.world3D.add( this.mirror );
     
     // Add wireframe plane
     this.wireMaterial = new THREE.MeshBasicMaterial({
@@ -146,6 +149,8 @@ define([
     for (var s in this.spheres) {
       this.spheres[s].render();
     }
+    
+    this.webcam.render();
     
     this.renderer.render(this.scene, this.camera);
     
