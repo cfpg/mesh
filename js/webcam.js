@@ -13,6 +13,8 @@ define([
   var Webcam = function() {    
     this.createVideo();
     
+    this.params = arguments[2];
+    
     Figure.apply(this, arguments);
   };
   
@@ -23,11 +25,13 @@ define([
   };
   
   Webcam.prototype.render = function() {
-    console.log('RENDERING WEBCAM')
+    
+    this.createAudioContext();
+    
   };
   
   Webcam.prototype.setup = function() {
-    console.log('SETTING UP WEBCAM')
+    this.obj = this.getObj();
   };
   
   Webcam.prototype.createVideo = function() {
@@ -44,10 +48,35 @@ define([
       video: true,
       audio: true
     }, function(stream){
+      THAT.stream = stream;
       THAT.video.src    = window.URL.createObjectURL(stream);
     }, function(error){
       console.log("Failed to get a stream due to", error);
     });
+    
+  };
+  
+  Webcam.prototype.renderAudioContext = function() {
+    
+  };
+  
+  Webcam.prototype.createAudioContext = function() {
+    if (!this.audioContext && this.stream) {
+      
+      this.audioContext = new AudioContext();
+      this.audioAnalyzer = this.audioContext.createAnalyzer();
+      this.audioSource = this.audioContext.createMediaStreamSource(this.stream);
+      
+      this.audioAnalyzer.fftSize = 64;
+      this.bufferLength = this.audioAnalyzer.fftSize;
+      this.dataArray = new Uint8Array( this.bufferLength );
+      this.audioAnalyzer.getByteTimeDomainData( this.dataArray );
+      
+      this.audioSource.connect( this.audioAnalyzer );
+      
+    } else if (this.audioContext) {
+      this.renderAudioContext();
+    }
   };
   
   Webcam.prototype.getMaterial = function() {

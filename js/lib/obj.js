@@ -8,6 +8,8 @@ define([
   
   var Figure = function(scene, camera) {
     this.obj = null;
+    this.geometry = null;
+    this.material = null;
     
     this.scene = scene;
     this.camera = camera;
@@ -28,11 +30,13 @@ define([
   };
   
   Figure.prototype.getGeometry = function() {
-    return new THREE.BoxGeometry( 1, 1, 2 );
+    this.geometry = new THREE.BoxGeometry( 1, 1, 2 );
+    return this.geometry;
   };
   
   Figure.prototype.getMaterial = function() {
-    return new THREE.MeshLambertMaterial( { color: 0x00ff00 } );
+    this.material = new THREE.MeshLambertMaterial( { color: 0x00ff00 } );
+    return this.material;
   };
   
   Figure.prototype.getObj = function() {

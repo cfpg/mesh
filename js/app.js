@@ -1,7 +1,7 @@
 define([
   'underscore',
   'three',
-  'js/lib/ImprovedNoise',
+  'js/lib/SomeNoise',
   
   'js/cube',
   'js/sphere',
@@ -34,6 +34,7 @@ define([
     
     // Create Webcam/Video Texture
     this.webcamTexture = new THREE.Texture( this.webcam.video );
+    this.webcamTexture.minFilter = THREE.NearestFilter;
     
     // Add world
     this.world3D = new THREE.Object3D();
@@ -47,7 +48,7 @@ define([
       map: this.webcamTexture
     });
     this.mirror = new THREE.Mesh(this.mirrorGeometry, this.meshMaterial);
-    // this.world3D.add( this.mirror );
+    this.world3D.add( this.mirror );
     
     // Add wireframe plane
     this.wireMaterial = new THREE.MeshBasicMaterial({
@@ -69,7 +70,7 @@ define([
     this.ctx = this.vidCanvas.getContext('2d');
     
     // Start rendering and animation!
-    this.createSphere('./img/spiral.png');
+    // this.createSphere('./img/spiral.svg');
     this.listeners();
     this.appendToBody();
     this.onResize();
@@ -141,6 +142,10 @@ define([
     this.world3D.scale = new THREE.Vector3(this.params.zoom, this.params.zoom, 1);
     this.world3D.rotation.x += ((this.params.mouseY * this.params.tiltAmount) - this.world3D.rotation.x) * this.params.tiltSpeed;
     this.world3D.rotation.y += ((this.params.mouseX * this.params.tiltAmount) - this.world3D.rotation.y) * this.params.tiltSpeed;
+    
+    for (var s in this.spheres) {
+      this.spheres[s].render();
+    }
     
     this.renderer.render(this.scene, this.camera);
     
